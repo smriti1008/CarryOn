@@ -10,6 +10,8 @@ const productRouter = require("./routes/productRouter");
 const userRouter = require("./routes/userRouter");
 const indexRouter = require("./routes/index");
 
+require("dotenv").config()
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
