@@ -20,5 +20,8 @@ app.use("/owner", ownerRouter);
 app.use("/product", productRouter);
 app.use("/user", userRouter);
 
+// app.get("/", function(req, res){
+//     res.send("yupp heyyyaaaaa");
+// })
 
 app.listen(3000);
