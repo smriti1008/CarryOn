@@ -9,7 +9,10 @@ module.exports.registerUser = async function(req, res){
         let {email, password, fullname} = req.body;
 
         let user = await userModel.findOne({email: email})
-        if(user) return res.status(401).send("You already have an account, Please login");
+       if(user) {
+            req.flash("error", "You already have an account, Please login");
+            return res.redirect("/"); // change this to your login page route
+        }
 
         bcrypt.genSalt(10, function(err, salt){
             if (err) return res.send(err.message);
@@ -37,18 +40,38 @@ module.exports.registerUser = async function(req, res){
 
 
 module.exports.loginUser = async function(req, res){
+    try {
     let {email, password} = req.body;
     let user = await userModel.findOne({email: email})
-    if(!user) return res.send("Email or Password incorrect")
+    if(!user) 
+        {
+            req.flash("error", "Email or Password incorrect")
+            return res.redirect("/");
+        }
 
     bcrypt.compare(password, user.password, function(err, result){
+        if(err){
+            return res.send(err.message)
+        }
         if(result){
             let token = generateToken(user);
+            console.log("LOGIN SUCCESS");
+            console.log("TOKEN:", token);
+
             res.cookie("token", token);
-            res.send("you can login");
+            return res.redirect("/shop");
         }
-        else{
-            res.send("Email or Password incorrect");
-        }
-    })    
+        req.flash("error", "Email or Password incorrect")
+        return res.redirect("/");
+    })  
+}
+catch(err){
+    console.log(err.message);
+    res.send("Something went wrong");
+}  
+}
+
+module.exports.logout = function(req, res){
+    res.cookie("token", "");
+    res.redirect("/");
 }
