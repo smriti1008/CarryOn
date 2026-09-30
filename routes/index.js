@@ -19,13 +19,41 @@ router.get("/shop", isLoggedIn, async function(req, res) {
 });
 
 router.get("/cart", isLoggedIn, async function(req, res) {
+
     let user = await userModel
         .findOne({ email: req.user.email })
         .populate("cart");
-        const bill = (Number(user.cart[0].price)+20)-Number(user.cart[0].discount)
-    res.render("cart", {user, bill});
+
+    let totalMRP = 0;
+    let totalDiscount = 0;
+
+    user.cart.forEach(function(product) {
+        totalMRP += Number(product.price);
+        totalDiscount += Number(product.discount);
+    });
+
+    let platformFee = user.cart.length > 0 ? 20 : 0;
+
+    let bill = totalMRP - totalDiscount + platformFee;
+
+    res.render("cart", {
+        user,
+        totalMRP,
+        totalDiscount,
+        platformFee,
+        bill
+    });
 });
 
+router.get("/account", isLoggedIn, async function(req, res) {
+
+    let user = await userModel.findOne({
+        email: req.user.email
+    });
+
+    res.render("account", { user });
+
+});
 router.get("/removefromcart/:id", isLoggedIn, async function(req, res) {
     let user = await userModel.findOne({ email: req.user.email });
 

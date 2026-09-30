@@ -1,27 +1,247 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
+
+```
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+```
+
 </head>
 
 <body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between px-5 py-3">
-        <h3 class="text-xl">CarryOn</h3>
-        <% var loggedIn = typeof loggedIn !=="undefined" ? loggedIn:true %>
-        <% if(loggedIn){ %>
-            <div class="flex gap-5">
 
-            <a href="/shop">Shop</a>
-            <a href="/cart">Cart</a>
-            <a href="/profile">My Account</a>
-            <a class="text-red-600" href="/user/Logout">Logout</a>
+```
+<nav class="w-full flex justify-between px-5 py-3">
+
+    <h3 class="text-xl">
+        CarryOn
+    </h3>
+
+    <% var loggedIn = typeof loggedIn !== "undefined" ? loggedIn : true %>
+
+    <% if(loggedIn){ %>
+
+        <div class="flex gap-5">
+
+            <a href="/shop">
+                Shop
+            </a>
+
+            <a href="/cart">
+                Cart
+            </a>
+
+            <!-- My Account -->
+            <button
+                onclick="openAccount()"
+                class="cursor-pointer"
+            >
+                My Account
+            </button>
+
+            <a
+                class="text-red-600"
+                href="/user/Logout"
+            >
+                Logout
+            </a>
+
         </div>
-        <% } %>
 
-    </nav>
-</body>
+    <% } %>
+
+</nav>
+
+
+<!-- Dark overlay -->
+
+<div
+    id="accountOverlay"
+    onclick="closeAccount()"
+    class="fixed inset-0 bg-black/30 z-40 hidden"
+>
+</div>
+
+
+<!-- Account drawer -->
+
+<div
+    id="accountDrawer"
+    class="fixed top-0 left-0 w-[380px] h-screen bg-white z-50
+           -translate-x-full transition-transform duration-300 ease-in-out
+           shadow-xl"
+>
+
+    <!-- Header -->
+
+    <div class="flex items-center justify-between px-6 py-5 border-b">
+
+        <h2 class="text-2xl font-semibold">
+            My Account
+        </h2>
+
+        <button
+            onclick="closeAccount()"
+            class="text-2xl cursor-pointer"
+        >
+            <i class="ri-close-line"></i>
+        </button>
+
+    </div>
+
+
+    <!-- Account content -->
+
+    <div class="px-6 py-8">
+
+        <!-- Profile -->
+
+        <div class="pb-6 border-b">
+
+            <h3 class="text-xl font-semibold mb-5">
+                Profile
+            </h3>
+
+            <div class="mb-4">
+
+                <p class="text-sm text-gray-500">
+                    Name
+                </p>
+
+                <p class="text-lg">
+                    <%= user.fullname %>
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <p class="text-sm text-gray-500">
+                    Email
+                </p>
+
+                <p class="text-lg">
+                    <%= user.email %>
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Orders -->
+
+        <div class="py-5 border-b">
+
+            <a href="/orders" class="flex items-center justify-between">
+
+                <div>
+
+                    <h3 class="text-lg font-medium">
+                        Orders
+                    </h3>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        View your orders
+                    </p>
+
+                </div>
+
+                <i class="ri-arrow-right-s-line text-xl"></i>
+
+            </a>
+
+        </div>
+
+
+        <!-- Addresses -->
+
+        <div class="py-5 border-b">
+
+            <a href="/addresses" class="flex items-center justify-between">
+
+                <div>
+
+                    <h3 class="text-lg font-medium">
+                        Addresses
+                    </h3>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Manage your addresses
+                    </p>
+
+                </div>
+
+                <i class="ri-arrow-right-s-line text-xl"></i>
+
+            </a>
+
+        </div>
+
+
+        <!-- Help -->
+
+        <div class="py-5">
+
+            <a href="/help" class="flex items-center justify-between">
+
+                <div>
+
+                    <h3 class="text-lg font-medium">
+                        Help & Support
+                    </h3>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Get help with your orders
+                    </p>
+
+                </div>
+
+                <i class="ri-arrow-right-s-line text-xl"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function openAccount() {
+
+        document
+            .getElementById("accountDrawer")
+            .classList.remove("-translate-x-full");
+
+        document
+            .getElementById("accountOverlay")
+            .classList.remove("hidden");
+
+    }
+
+
+    function closeAccount() {
+
+        document
+            .getElementById("accountDrawer")
+            .classList.add("-translate-x-full");
+
+        document
+            .getElementById("accountOverlay")
+            .classList.add("hidden");
+
+    }
+
+</script>
+```
