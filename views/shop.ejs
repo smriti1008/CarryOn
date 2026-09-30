@@ -1,4 +1,11 @@
 <%- include('./partials/header') %>
+<% if(success.length>0){ %>
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+            <span class="inline-block mt-1 mb-1 text-white">
+                <%= success %>
+            </span>
+        </div>
+        <% } %>
     <div class="w-full h-screen flex items-start px-20 py-20">
         <div class="w-[25%] flex h-screen flex-col items-start">
             <div class="flex items-center gap-2">
@@ -29,17 +36,17 @@
 
             <div class="w-full">
 
-                <div class="w-full h-52 bg-yellow-300">
+                <div class="w-full h-52 bg-[<%= product.bgcolor %>]">
 
                    <% if (product.image) { %>
-    <img class="h-[12rem]"
+    <img class="h-[11rem] flex items-center justify-center"
         src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
         alt="">
 <% } %>
 
                 </div>
 
-                <div class="flex justify-between bg-red-500 items-center px-4 py-4">
+                <div class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4">
 
                     <div>
                         <h3><%= product.name %></h3>
@@ -48,8 +55,7 @@
 
                     <a
                         class="w-7 h-7 flex items-center justify-center rounded-full bg-white"
-                        href=""
-                    >
+                        href="/addtocart/<%= product._id %>">
                         <i class="ri-add-line"></i>
                     </a>
 
