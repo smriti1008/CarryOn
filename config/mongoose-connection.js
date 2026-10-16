@@ -1,14 +1,20 @@
+
 const mongoose = require("mongoose");
-const config = require("config");
-const dbgr = require("debug")("development:mongoose")
+require("dotenv").config();
+
+const mongoURI = process.env.MONGODB_URI;
+
+if (!mongoURI) {
+    throw new Error("MONGODB_URI is missing from .env");
+}
 
 mongoose
-.connect(`${config.get("MONGODB_URI")}/CarryOn`)
-.then(function(){
-    dbgr("connected");
-})
-.catch(function(err){
-    dbgr(err);
-})
+    .connect(mongoURI)
+    .then(() => {
+        console.log("MongoDB Atlas connected successfully");
+    })
+    .catch((err) => {
+        console.error("MongoDB connection failed:", err.message);
+    });
 
 module.exports = mongoose.connection;

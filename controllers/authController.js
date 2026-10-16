@@ -1,77 +1,120 @@
-const userModel = require("../models/usermodel")
+
+const userModel = require("../models/usermodel");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
-const {generateToken} = require("../utils/generateToken")
+const { generateToken } = require("../utils/generateToken");
 
-module.exports.registerUser = async function(req, res){
-    try
-    {
-        let {email, password, fullname} = req.body;
+const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+};
 
-        let user = await userModel.findOne({email: email})
-       if(user) {
-            req.flash("error", "You already have an account, Please login");
-            return res.redirect("/"); // change this to your login page route
-        }
-
-        bcrypt.genSalt(10, function(err, salt){
-            if (err) return res.send(err.message);
-
-            bcrypt.hash(password, salt,async function(err, hash){
-                if(err) return res.send(err.message)
-                else{
-                    let user = await userModel.create({
-                        email,
-                        password: hash,
-                        fullname
-                    })
-                    let token = generateToken(user);
-                    res.cookie("token", token)
-                    res.send("user created successfully");
-                }
-            })
-        })
-}
-
-    catch(err){
-        console.log(err.message);
-    }
-}
-
-
-module.exports.loginUser = async function(req, res){
+module.exports.registerUser = async function (req, res) {
     try {
-    let {email, password} = req.body;
-    let user = await userModel.findOne({email: email})
-    if(!user) 
-        {
-            req.flash("error", "Email or Password incorrect")
-            return res.redirect("/");
+        const { email, password, fullname } = req.body;
+
+        if (!email || !password || !fullname) {
+            return res.status(400).json({
+                message: "Full name, email, and password are required.",
+            });
         }
 
-    bcrypt.compare(password, user.password, function(err, result){
-        if(err){
-            return res.send(err.message)
-        }
-        if(result){
-            let token = generateToken(user);
-            console.log("LOGIN SUCCESS");
-            console.log("TOKEN:", token);
+        const existingUser = await userModel.findOne({ email });
 
-            res.cookie("token", token);
-            return res.redirect("/shop");
+        if (existingUser) {
+            return res.status(409).json({
+                message: "You already have an account. Please log in.",
+            });
         }
-        req.flash("error", "Email or Password incorrect")
-        return res.redirect("/");
-    })  
-}
-catch(err){
-    console.log(err.message);
-    res.send("Something went wrong");
-}  
-}
 
-module.exports.logout = function(req, res){
-    res.cookie("token", "");
-    res.redirect("/");
-}
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = await userModel.create({
+            fullname,
+            email,
+            password: hashedPassword,
+        });
+
+        const token = generateToken(user);
+
+        res.cookie("token", token, {
+            ...cookieOptions,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        return res.status(201).json({
+            message: "Account created successfully!",
+            user: {
+                id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+            },
+        });
+    } catch (err) {
+        console.error("Registration error:", err);
+        return res.status(500).json({
+            message: "Something went wrong during registration.",
+        });
+    }
+};
+
+module.exports.loginUser = async function (req, res) {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Email and password are required.",
+            });
+        }
+
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({
+                message: "Invalid email or password.",
+            });
+        }
+
+        const passwordMatches = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!passwordMatches) {
+            return res.status(401).json({
+                message: "Invalid email or password.",
+            });
+        }
+
+        const token = generateToken(user);
+
+        res.cookie("token", token, {
+            ...cookieOptions,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        return res.status(200).json({
+            message: "Login successful!",
+            user: {
+                id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+            },
+        });
+    } catch (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({
+            message: "Something went wrong during login.",
+        });
+    }
+};
+
+module.exports.logout = function (req, res) {
+    res.clearCookie("token", cookieOptions);
+
+    return res.status(200).json({
+        message: "Logged out successfully.",
+    });
+};

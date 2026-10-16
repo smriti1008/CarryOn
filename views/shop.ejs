@@ -1,82 +1,332 @@
+
 <%- include('./partials/header') %>
 
-<% if(success.length > 0){ %> <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500"> <span class="inline-block mt-1 mb-1 text-white">
-<%= success %> </span> </div>
+<% if (success && success.length > 0) { %>
+    <div style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:1000;background:#292720;color:white;padding:14px 24px;border-radius:8px;box-shadow:0 8px 24px #0002;">
+        <%= success %>
+    </div>
 <% } %>
 
-<div class="w-full h-screen flex items-start px-20 py-20">
+<style>
+    .carryon-shop {
+        min-height: 100vh;
+        background: #faf8f4;
+        color: #282720;
+        padding: 48px 5%;
+        font-family: Arial, sans-serif;
+    }
+
+    .carryon-heading {
+        margin-bottom: 40px;
+    }
+
+    .carryon-eyebrow {
+        color: #9b7658;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 11px;
+        margin-bottom: 14px;
+    }
+
+    .carryon-heading h1 {
+        font-family: Georgia, serif;
+        font-size: clamp(32px, 4vw, 52px);
+        font-weight: 400;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+    }
+
+    .carryon-subtitle {
+        color: #827d74;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .carryon-layout {
+        display: grid;
+        grid-template-columns: 185px minmax(0, 1fr);
+        gap: 38px;
+    }
+
+    .carryon-sidebar h3 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 18px;
+    }
+
+    .carryon-sidebar a {
+        display: block;
+        color: #777168;
+        text-decoration: none;
+        font-size: 14px;
+        margin: 17px 0;
+        transition: color .2s;
+    }
+
+    .carryon-sidebar a:hover {
+        color: #a36f46;
+    }
+
+    .carryon-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        color: #827d74;
+        font-size: 13px;
+    }
+
+    .carryon-toolbar select {
+        padding: 11px 14px;
+        background: #fff;
+        color: #282720;
+        border: 1px solid #e7e0d6;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .carryon-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 30px 20px;
+    }
+
+    .carryon-card {
+        min-width: 0;
+    }
 
 
-<div class="w-[25%] flex h-screen flex-col items-start">
 
-    <div class="flex items-center gap-2">
-        <h3>sort by</h3>
 
-        <form action="/shop">
-            <select class="border-[1px] px-2 py-1" name="sortby">
-                <option value="popular">Popular</option>
-                <option value="newest">Newest</option>
-            </select>
-        </form>
-    </div>
+.carryon-image {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: #f5f2ed;
+    position: relative;
+}
 
-    <div class="flex flex-col mt-20">
-        <a class="block w-fit mb-2" href="">New Collection</a>
-        <a class="block w-fit mb-2" href="">All Products</a>
-        <a class="block w-fit mb-2" href="">Discounted Products</a>
-    </div>
+.carryon-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    padding: 0;
+    border: none;
+}
 
-    <div class="mt-32">
-        <a class="block w-fit mb-2" href="">Filter by :</a>
-        <a class="block w-fit mb-2" href="">Availability</a>
-        <a class="block w-fit mb-2" href="">Discount</a>
-    </div>
+.carryon-card:hover .carryon-image img {
+    transform: scale(1.03);
+}
 
-</div>
 
-<div class="w-[75%] h-screen">
 
-    <div class="grid grid-cols-4 gap-5">
+    .carryon-product-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 17px 0;
+    }
 
-        <% products.forEach(function(product){ %>
+    .carryon-product-name {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 7px;
+        overflow-wrap: anywhere;
+    }
 
-            <div class="w-full">
+    .carryon-price {
+        font-size: 14px;
+        color: #9b7658;
+    }
 
-                <div class="w-full h-52 bg-[<%= product.bgcolor %>]">
+    .carryon-add {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 39px;
+        height: 39px;
+        background: #292720;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 50%;
+        font-size: 24px;
+        transition: background .2s, transform .2s;
+    }
 
-                    <% if (product.image) { %>
-                        <img
-                            class="h-[12rem]"
-                            src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                            alt="">
-                    <% } %>
+    .carryon-add:hover {
+        background: #9b7658;
+        transform: translateY(-2px);
+    }
 
-                </div>
+    .carryon-empty {
+        grid-column: 1 / -1;
+        color: #827d74;
+        padding: 40px 0;
+    }
 
-                <div class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4">
+    @media (max-width: 1000px) {
+        .carryon-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
 
-                    <div>
-                        <h3><%= product.name %></h3>
-                        <h4>₹ <%= product.price %></h4>
-                    </div>
+        .carryon-image {
+            height: 260px;
+        }
+    }
 
-                    <a
-                        class="w-7 h-7 flex items-center justify-center rounded-full bg-white"
-                        href="/addtocart/<%= product._id %>">
-                        <i class="ri-add-line"></i>
-                    </a>
+    @media (max-width: 600px) {
+        .carryon-shop {
+            padding: 32px 18px;
+        }
 
-                </div>
+        .carryon-layout {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
 
+        .carryon-sidebar {
+            display: none;
+        }
+
+        .carryon-grid {
+            gap: 20px 12px;
+        }
+
+        .carryon-image {
+            height: 190px;
+        }
+
+        .carryon-product-name,
+        .carryon-price {
+            font-size: 12px;
+        }
+
+        .carryon-add {
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+        }
+
+        .carryon-toolbar {
+            font-size: 12px;
+        }
+    }
+</style>
+
+<main class="carryon-shop">
+
+    <header class="carryon-heading">
+        <p class="carryon-eyebrow">CarryOn · Everyday essentials</p>
+        <h1>Find your everyday carry.</h1>
+        <p class="carryon-subtitle">
+            Thoughtfully chosen bags for wherever life takes you.
+        </p>
+    </header>
+
+    <div class="carryon-layout">
+
+        <aside class="carryon-sidebar">
+            <h3>Collections</h3>
+            <a href="/shop">All products</a>
+            <a href="/shop?sortby=newest">New arrivals</a>
+
+            <div style="margin-top:38px;">
+                <h3>Explore</h3>
+                <a href="/shop">Everyday bags</a>
+            </div>
+        </aside>
+
+        <section>
+            <div class="carryon-toolbar">
+                <span>Explore the collection</span>
+
+                <form action="/shop" method="GET">
+                    <select
+                        name="sortby"
+                        onchange="this.form.submit()"
+                        aria-label="Sort products"
+                    >
+                        <option value="popular"
+                            <%= sortby === 'popular' ? 'selected' : '' %>>
+                            Featured
+                        </option>
+                        <option value="newest"
+                            <%= sortby === 'newest' ? 'selected' : '' %>>
+                            New arrivals
+                        </option>
+                    </select>
+                </form>
             </div>
 
-        <% }) %>
+            <div class="carryon-grid">
+
+                <% if (products && products.length > 0) { %>
+
+                    <% products.forEach(function(product) { %>
+
+                        <article class="carryon-card">
+
+                            <div class="carryon-image">
+
+                                <% if (product.image && product.image.length > 0) { %>
+                                    <img
+                                        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                        alt="<%= product.name %>"
+                                        loading="lazy"
+                                    >
+                                <% } else { %>
+                                    <span style="font-size:13px;color:#827d74;">
+                                        Image unavailable
+                                    </span>
+                                <% } %>
+
+                            </div>
+
+                            <div class="carryon-product-info">
+
+                                <div>
+                                    <h3 class="carryon-product-name">
+                                        <%= product.name %>
+                                    </h3>
+
+                                    <p class="carryon-price">
+                                        ₹ <%= product.price %>
+                                    </p>
+                                </div>
+
+                                <a
+                                    class="carryon-add"
+                                    href="/addtocart/<%= product._id %>"
+                                    aria-label="Add <%= product.name %> to cart"
+                                >+</a>
+
+                            </div>
+
+                        </article>
+
+                    <% }) %>
+
+                <% } else { %>
+
+                    <p class="carryon-empty">
+                        No products available right now. Please check back soon.
+                    </p>
+
+                <% } %>
+
+            </div>
+        </section>
 
     </div>
 
-</div>
-
-
-</div>
+</main>
 
 <%- include('./partials/footer') %>

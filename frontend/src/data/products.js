@@ -1,0 +1,8 @@
+export const products = [
+ {id:'p1',name:'The Weekender',category:'Travel bags',price:2499,oldPrice:3199,color:'Sandstone',tag:'BESTSELLER',image:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85',desc:'A roomy, considered carryall for short escapes and long weekends.'},
+ {id:'p2',name:'Everyday Backpack',category:'Backpacks',price:1899,oldPrice:2299,color:'Olive',tag:'EVERYDAY',image:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85',desc:'A lightweight everyday backpack with room for all the essentials.'},
+ {id:'p3',name:'City Sling',category:'Accessories',price:999,color:'Charcoal',tag:'NEW',image:'https://images.unsplash.com/photo-1622560480654-d96214fdc887?auto=format&fit=crop&w=900&q=85',desc:'Hands-free, easy-access storage for the days you travel light.'},
+ {id:'p4',name:'Cabin Companion',category:'Travel bags',price:3299,oldPrice:3899,color:'Midnight',tag:'TRAVEL READY',image:'https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?auto=format&fit=crop&w=900&q=85',desc:'A dependable travel bag built to keep your next trip organised.'},
+ {id:'p5',name:'Utility Tote',category:'Everyday',price:799,color:'Natural',image:'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=85',desc:'A simple, spacious tote that goes from errands to everyday.'},
+ {id:'p6',name:'Mini Crossbody',category:'Accessories',price:1199,color:'Cocoa',tag:'JUST IN',image:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85',desc:'Compact organisation for the little things you want close.'},
+]
