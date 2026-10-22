@@ -2,6 +2,7 @@
 
 **CarryOn** is a full-stack e-commerce web application built using Node.js, Express.js, MongoDB, and EJS. It provides a platform for browsing products and managing a shopping experience, with authentication and protected routes.
 
+
 ## ✨ Features
 
 - **Product Browsing:** View and explore available products.
